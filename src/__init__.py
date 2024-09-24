@@ -7,7 +7,10 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 from src.config.loadenv import Config
+from src.db.main import initdb
 from src.graphql import graphql_app
+
+
 
 
 version = 'v1'
@@ -16,7 +19,7 @@ version = 'v1'
 @asynccontextmanager
 async def lifespan(app: FastAPI):    
     print("Server is starting...")
-    #await initdb()
+    await initdb()
     yield
     print("server is stopping")
 
@@ -32,6 +35,8 @@ app = FastAPI(
 
 
 #app.include_router(book_router,prefix=f"/api/{version}/books", tags=['books'])
+
+
 app.include_router(graphql_app, prefix='/graphql', tags=['books'])
 
 # app = FastAPI()

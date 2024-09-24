@@ -2,33 +2,26 @@ from fastapi import Depends
 from strawberry import ID, Info
 
 from src.db.main import get_session
+from src.schemas.book_schema import BookSchema
 from . import schemas
 from typing import List
 from src.models import book
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.service.book_service import BookService
+from strawberry.exceptions import StrawberryException
+from src.utils import schema_converter
 
 
 book_service = BookService()
+
 
 class QueryResolver:
     @staticmethod
     async def get_books():
         async with get_session() as session:  # Use `async with` directly
             allbooks = await book_service.get_all_books(session)
-
             return [
-                schemas.BookSchemagql(
-                    uid=book.uid,
-                    title=book.title,
-                    author=book.author,
-                    publisher=book.publisher,
-                    published_date=book.published_date,
-                    page_count=book.page_count,
-                    language=book.language,
-                    created_at=book.created_at,
-                    updated_at=book.updated_at
-                )
+                schema_converter.to_BookSchemagql(book)
                 for book in allbooks
             ]
 
@@ -36,21 +29,48 @@ class QueryResolver:
         
 
     @staticmethod
-    def get_book():
-       newBook: schemas.Testing = schemas.Testing(samuel="samuel")
-       return newBook
+    async def get_book(book_uid: str):
+        async with get_session() as session:  # Use `async with` directly
+            book = await book_service.get_book(book_uid, session)
+            if book:
+                return schema_converter.to_BookSchemagql(book)
+           
+            
+
+            
 
 
 class MutationResolver:
     @staticmethod
-    def add_book():
-        pass
+    async def add_book(new_book: schemas.UpdateBookSchema):
+        book_for_service = schema_converter.to_BookSchema(new_book)
+        async with get_session() as session:  # Use `async with` directly
+            book = await book_service.create_book(book_for_service, session)
+            if book:
+                return schema_converter.to_BookSchemagql(book)  
 
     @staticmethod
-    def update_book() :
-        pass
+    async def update_book(book_uid: str, to_update:schemas.BookUpdateSchemagql ) :
+       book_for_service = schema_converter.to_UpdateSchema(to_update)
+       
+       async with get_session() as session:  # Use `async with` directly
+            book = await book_service.update_book(book_uid ,book_for_service, session)
+            if book:
+                return schema_converter.to_BookSchemagql(book)
+
 
     @staticmethod
-    def delete_book():
-        pass
+    async def delete_book(book_uid: str)-> schemas.DeleteBookResponse:
+        async with get_session() as session:  # Use `async with` directly
+            book = await book_service.delete_book(book_uid, session)
+            if book is None:
+                return schemas.DeleteBookResponse(
+                    success=False,
+                    message=f"Book with uid {book_uid} not found or deletion failed."
+                ) 
+            else:
+                return schemas.DeleteBookResponse(
+                    success= True,
+                    message = f"Book with uid {book_uid} has been deleted."
+                )
         

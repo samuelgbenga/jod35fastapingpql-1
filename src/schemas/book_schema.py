@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
@@ -8,11 +9,10 @@ class BookSchema(BaseModel):
     published_date: str
     page_count: int
     language: str
-    testing: str
 
 class BookUpdateSchema(BaseModel):
-    title: str
-    author: str
-    publisher: str
-    page_count: int
-    language: str
+    title: Optional[str] = None
+    author: Optional[str] = None
+    publisher: Optional[str] = None
+    page_count: Optional[int] = None
+    language: Optional[str] = None

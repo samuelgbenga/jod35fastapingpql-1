@@ -18,8 +18,8 @@ class BookSchemagql:
     updated_at:datetime
 
 @strawberry.type
-class Testing:
-    samuel:str
+class GeneralResponse:
+    message:str
 
 
 @strawberry.input
@@ -29,12 +29,22 @@ class PaginationInput:
 
 @strawberry.input
 class UpdateBookSchema:
-    content: Optional[str] = None
-    is_done: Optional[bool] = None
     title: Optional[str] = None
     author: Optional[str] = None
     publisher: Optional[str] = None
     published_date: Optional[str] = None
     page_count: Optional[int] = None
     language:Optional[str] = None
-	
+
+@strawberry.input
+class BookUpdateSchemagql:
+    title: Optional[str] = None
+    author: Optional[str] = None
+    publisher: Optional[str] = None
+    page_count: Optional[int] = None
+    language: Optional[str] = None
+
+@strawberry.type
+class DeleteBookResponse:
+    success: bool
+    message: str
