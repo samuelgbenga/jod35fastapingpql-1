@@ -5,16 +5,15 @@ from src.graphql import schemas
 
 def to_BookSchemagql(from_schema):
 
+    # i used mode_dump to reduce to too many lines of mapping incase you are looking at this code
+    # and you dont understand what is going on here
+    # you can use mode_dump to reduce the number of lines of mapping
+    # but model_dump is a pydantic function not available for strawberry schema
+    # it works oh no scatter my code oh
+    temp : dict= from_schema.model_dump()
+
     return  schemas.BookSchemagql(
-                    uid=from_schema.uid,
-                    title=from_schema.title,
-                    author=from_schema.author,
-                    publisher=from_schema.publisher,
-                    published_date=from_schema.published_date,
-                    page_count=from_schema.page_count,
-                    language=from_schema.language,
-                    created_at=from_schema.created_at,
-                    updated_at=from_schema.updated_at
+                    **temp
                 ) 
 
 
@@ -29,6 +28,7 @@ def to_BookSchema(from_schemagql):
     )
 
 def to_UpdateSchema(from_schemagql):
+
     return book_schema.BookUpdateSchema(
             title=from_schemagql.title,
             author=from_schemagql.author,
