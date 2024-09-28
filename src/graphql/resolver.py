@@ -10,9 +10,12 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.service.book_service import BookService
 from strawberry.exceptions import StrawberryException
 from src.utils import schema_converter
+from src.auth.service import UserService
 
 
 book_service = BookService()
+
+auth_service = UserService()
 
 
 class QueryResolver:
@@ -25,7 +28,14 @@ class QueryResolver:
                 for book in allbooks
             ]
 
-       
+    @staticmethod
+    async def get_all_users():
+        async with get_session() as session:  # Use `async with` directly
+            allusers = await auth_service.get_all_users(session)
+            return [
+                schema_converter.to_Usergql(user)
+                for user in allusers
+            ]
         
 
     @staticmethod
@@ -34,11 +44,7 @@ class QueryResolver:
             book = await book_service.get_book(book_uid, session)
             if book:
                 return schema_converter.to_BookSchemagql(book)
-           
             
-
-            
-
 
 class MutationResolver:
     @staticmethod
@@ -48,6 +54,20 @@ class MutationResolver:
             book = await book_service.create_book(book_for_service, session)
             if book:
                 return schema_converter.to_BookSchemagql(book)  
+
+    @staticmethod
+    async def add_user(new_user: schemas.NewUsergql):
+        user_for_service = schema_converter.to_UserSchema(new_user)
+        async with get_session() as session:  # Use `async with` directly
+            email = user_for_service.email
+            isExist = await auth_service.user_exists(email, session)
+            if isExist:
+                return None
+            else:
+                user = await auth_service.create_user(user_for_service, session)
+                if user:
+                    return schema_converter.to_Usergql(user)              
+    
 
     @staticmethod
     async def update_book(book_uid: str, to_update:schemas.BookUpdateSchemagql ) :

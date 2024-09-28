@@ -17,15 +17,27 @@ class BookSchemagql:
     created_at: datetime
     updated_at:datetime
 
-@strawberry.type
-class GeneralResponse:
-    message:str
 
+@strawberry.type
+class Usergql:
+    uid: uuid.UUID
+    username: str
+    first_name: str
+    last_name: str
+    middle_name: str 
+    is_verified: bool 
+    email: str
+    password_hash: str
+    created_at: datetime
 
 @strawberry.input
-class PaginationInput:
-	offset: int
-	limit: int
+class NewUsergql:
+    username: str
+    first_name: str
+    last_name: str
+    middle_name: str 
+    email: str
+    password: str
 
 @strawberry.input
 class UpdateBookSchema:

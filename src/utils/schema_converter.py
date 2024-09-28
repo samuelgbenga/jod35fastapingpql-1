@@ -1,6 +1,7 @@
 
 from src.schemas import book_schema
 from src.graphql import schemas
+from src.auth.schemas import UserCreateModel
 
 
 def to_BookSchemagql(from_schema):
@@ -13,6 +14,14 @@ def to_BookSchemagql(from_schema):
     temp : dict= from_schema.model_dump()
 
     return  schemas.BookSchemagql(
+                    **temp
+                ) 
+
+def to_Usergql(dbmodel):
+
+    temp : dict= dbmodel.model_dump()
+
+    return  schemas.Usergql(
                     **temp
                 ) 
 
@@ -36,3 +45,14 @@ def to_UpdateSchema(from_schemagql):
             page_count=from_schemagql.page_count,
             language=from_schemagql.language
     )
+
+def to_UserSchema(from_newUsergql):
+    return UserCreateModel(
+            username= from_newUsergql.username,
+            first_name = from_newUsergql.first_name,
+            last_name = from_newUsergql.last_name,
+            middle_name =from_newUsergql.middle_name, 
+            email = from_newUsergql.email,
+            password =from_newUsergql.password
+    )
+    

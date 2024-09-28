@@ -1,12 +1,10 @@
 from datetime import datetime
-from fastapi import Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.models.book import Book
 from src.schemas.book_schema import BookSchema, BookUpdateSchema
 from sqlmodel import select, desc
-from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
-from src.db.main import get_session
+
 
 
 class BookService:
