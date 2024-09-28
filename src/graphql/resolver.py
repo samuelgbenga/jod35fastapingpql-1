@@ -70,6 +70,14 @@ class MutationResolver:
     
 
     @staticmethod
+    async def login_user(login_info: schemas.UserLoginModelgql):
+        user_info_for_service = schema_converter.to_loginInfo(login_info)
+        async with get_session() as session:  # Use `async with` directly
+            login_resp = await auth_service.login_user(user_info_for_service, session)
+            gqlResponse = schema_converter.to_loginResponsegql(login_resp)
+            return gqlResponse
+
+    @staticmethod
     async def update_book(book_uid: str, to_update:schemas.BookUpdateSchemagql ) :
        book_for_service = schema_converter.to_UpdateSchema(to_update)
        

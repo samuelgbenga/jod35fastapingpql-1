@@ -2,6 +2,8 @@
 from datetime import datetime
 from typing import Optional
 import uuid
+from fastapi.responses import JSONResponse
+from pydantic import Field
 import strawberry
 
 
@@ -29,6 +31,16 @@ class Usergql:
     email: str
     password_hash: str
     created_at: datetime
+
+@strawberry.type
+class LoginResponsegql:
+    message: str
+    access_token: Optional[str] = None
+    refresh_token: Optional[str] = None
+    email: Optional[str] = None
+    uid: Optional[str] = None
+    
+
 
 @strawberry.input
 class NewUsergql:
@@ -60,3 +72,10 @@ class BookUpdateSchemagql:
 class DeleteBookResponse:
     success: bool
     message: str
+
+@strawberry.input
+class UserLoginModelgql:
+    email: str = Field(max_length=40)
+    password: str  = Field(min_length=6)
+
+

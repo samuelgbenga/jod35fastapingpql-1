@@ -1,5 +1,6 @@
 
 from datetime import datetime
+from typing import Optional
 import uuid
 from pydantic import BaseModel, Field
 
@@ -22,3 +23,14 @@ class UserModel(BaseModel):
     is_verified: bool 
     email: str
     created_at: datetime
+
+class UserLoginModel(BaseModel):
+    email: str = Field(max_length=40)
+    password: str  = Field(min_length=6)
+
+class LoginResponse(BaseModel):
+    message: str
+    auth_token: Optional[str] = None
+    refresh_token: Optional[str] = None
+    email: Optional[str] = None
+    uid: Optional[str] = None

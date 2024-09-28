@@ -3,7 +3,7 @@ import strawberry
 from strawberry.fastapi import GraphQLRouter
 
 
-from .schemas import BookSchemagql, DeleteBookResponse, Usergql
+from .schemas import BookSchemagql, DeleteBookResponse, LoginResponsegql, Usergql
 
 from .resolver import QueryResolver, MutationResolver
 
@@ -24,6 +24,7 @@ class Mutation:
     update_book: BookSchemagql|None  = strawberry.field(resolver=MutationResolver.update_book)
     delete_book: DeleteBookResponse = strawberry.field(resolver=MutationResolver.delete_book)
     add_user: Usergql|None = strawberry.field(resolver=MutationResolver.add_user)
+    login_user: LoginResponsegql | None = strawberry.field(resolver=MutationResolver.login_user)
 
 
 

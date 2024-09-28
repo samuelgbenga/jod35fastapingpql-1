@@ -2,6 +2,7 @@
 from src.schemas import book_schema
 from src.graphql import schemas
 from src.auth.schemas import UserCreateModel
+from src.auth.schemas import UserLoginModel
 
 
 def to_BookSchemagql(from_schema):
@@ -55,4 +56,23 @@ def to_UserSchema(from_newUsergql):
             email = from_newUsergql.email,
             password =from_newUsergql.password
     )
-    
+
+def to_loginInfo(from_loginInfogql):
+    return UserLoginModel(
+        email = from_loginInfogql.email,
+        password= from_loginInfogql.password
+    )
+
+# def to_loginResponsegql(from_loginResponse):
+#     return schemas.LoginResponsegql(
+#         message= from_loginResponse.message,
+#         auth_token= from_loginResponse.auth_token,
+#         refresh_token= from_loginResponse.refresh_token,
+#         email= from_loginResponse.email,
+#         uid=from_loginResponse.uid
+#     )
+
+def to_loginResponsegql(from_loginResponse):
+    return schemas.LoginResponsegql(
+        **from_loginResponse
+    )
