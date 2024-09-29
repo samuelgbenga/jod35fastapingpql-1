@@ -11,8 +11,9 @@ class IsAuthenticated(BasePermission):
     def has_permission(self, source: typing.Any, info: Info, **kwargs) -> bool:
         request = info.context["request"]
         # Access headers authentication
-        authorization = request.headers["Authorization"]
-        if authorization:
-            token = authorization.split("Bearer ")[-1]
-            return decode_token(token)
+        if "Authorization" in request.headers and request.headers.get("Authorization") is not None:
+            authorization = request.headers["Authorization"]
+            if authorization.startswith("Bearer "):
+                token = authorization.split("Bearer ")[-1]
+                return decode_token(token)
         return False
