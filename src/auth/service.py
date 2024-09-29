@@ -47,7 +47,7 @@ class UserService:
         return new_user
     
 
-    async def login_user(self, login_data: UserLoginModel, session: AsyncSession):
+    async def login_user(self, login_data: UserLoginModel, session: AsyncSession) -> dict[str, str] | None:
         email = login_data.email
         password = login_data.password
 
@@ -74,6 +74,9 @@ class UserService:
                     "email": user.email,
                     "uid": str(user.uid),
                 }
+            else:
+                return {"message": "Login failed"}
 
         else:
-            return {"message": "Login failed"}
+            return {"message": "Login failed"
+                    }

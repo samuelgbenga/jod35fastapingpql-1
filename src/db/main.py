@@ -15,8 +15,6 @@ engine = create_async_engine(
     echo=True
 )
 
-
-
 async def initdb():
     """create a our db model in the postgress db"""
     async with engine.begin() as conn:

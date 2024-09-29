@@ -25,18 +25,23 @@ def create_access_token(user_data: dict , expiry:timedelta = None, refresh: bool
 
     return token
 
-def decode_token(token: str) -> dict | None:
+def decode_token(token: str) :
     try:
         token_data = jwt.decode(
             jwt=token,
+            key=Config.JWT_SECRET,
             algorithms=[Config.JWT_ALGORITHM]
         )
-
-        return token_data
+        if token_data:
+            return True
+        else:
+            return False
+        
     except jwt.PyJWTError as jwte:
         logging.exception(jwte)
-        return None
-
+        print(token)
+        return False
+    
     except Exception as e:
         logging.exception(e)
-        return None
+        return False

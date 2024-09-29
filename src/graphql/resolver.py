@@ -1,6 +1,7 @@
 from fastapi import Depends
 from strawberry import ID, Info
 
+
 from src.db.main import get_session
 from src.schemas.book_schema import BookSchema
 from . import schemas
@@ -18,9 +19,13 @@ book_service = BookService()
 auth_service = UserService()
 
 
+
+
 class QueryResolver:
     @staticmethod
     async def get_books():
+         # Access token details from the GraphQL context
+        #token_details = info.context["token_details"]
         async with get_session() as session:  # Use `async with` directly
             allbooks = await book_service.get_all_books(session)
             return [

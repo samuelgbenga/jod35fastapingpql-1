@@ -34,13 +34,10 @@ app = FastAPI(
 
 
 
-#app.include_router(book_router,prefix=f"/api/{version}/books", tags=['books'])
+
 
 
 app.include_router(graphql_app, prefix='/graphql', tags=['books'])
 
-# app = FastAPI()
 
-# @app.get('/')
-# async def read_root():
-#     return {"message": Config.DATABASE_URL}
+
