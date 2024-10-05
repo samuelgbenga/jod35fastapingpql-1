@@ -63,14 +63,6 @@ def to_loginInfo(from_loginInfogql):
         password= from_loginInfogql.password
     )
 
-# def to_loginResponsegql(from_loginResponse):
-#     return schemas.LoginResponsegql(
-#         message= from_loginResponse.message,
-#         auth_token= from_loginResponse.auth_token,
-#         refresh_token= from_loginResponse.refresh_token,
-#         email= from_loginResponse.email,
-#         uid=from_loginResponse.uid
-#     )
 
 def to_loginResponsegql(from_loginResponse):
     return schemas.LoginResponsegql(
